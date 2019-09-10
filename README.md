@@ -1,8 +1,8 @@
-# (TODO: your game's title)
+# Hall of the Haruspices
 
-Author: (TODO: your name)
+Author: Jan Orlowski (jorlowsk)
 
-Design: (TODO: In two sentences or fewer, describe what is new and interesting about your game.)
+Design: Try to appease the ancient horrors with your gifts. You have 3 gifts, each matches one being. Listen to their requests closely.
 
 Screen Shot:
 
@@ -10,10 +10,10 @@ Screen Shot:
 
 How To Play:
 
-(TODO: describe the controls and (if needed) goals/strategy.)
+Select options with arrow keys and select option with enter
 
 Art Sources:
 
-(TODO: fill in information about the sources of any artwork you used in the game that you did not draw.)
+I drew all my art.
 
 This game was built with [NEST](NEST.md).

@@ -43,7 +43,17 @@ bool MenuMode::handle_event(SDL_Event const &evt, glm::uvec2 const &window_size)
 			}
 			return true;
 		} else if (evt.key.keysym.sym == SDLK_RETURN) {
-			if (selected < items.size() && items[selected].on_select) {
+
+			int total_size = 0;
+			for( int i = 0; i < items.size(); i++ )
+			{
+				total_size += int( items[i].name.length() );
+			}
+			if( next_char_to_show < total_size )
+			{
+				next_char_to_show = total_size;
+			}
+			else if (selected < items.size() && items[selected].on_select) {
 				items[selected].on_select(items[selected]);
 				return true;
 			}
