@@ -21,6 +21,11 @@ struct MenuMode : Mode {
 
 	//----- menu state -----
 
+	float delay_ticker = 0.0f;
+	const float char_print_delay = 0.025f;
+	int next_char_to_show = 0;
+
+
 	//Each menu item is an "Item":
 	struct Item {
 		Item(

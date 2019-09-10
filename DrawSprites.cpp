@@ -11,6 +11,7 @@
 
 //for glm::to_string():
 #include <glm/gtx/string_cast.hpp>
+#include <random>
 
 //All DrawSprites instances share a vertex array object and vertex buffer, initialized at load time:
 
@@ -141,17 +142,42 @@ void DrawSprites::draw(Sprite const &sprite, glm::vec2 const &center, float scal
 
 }
 
-void DrawSprites::draw_text(std::string const &name, glm::vec2 const &anchor, float scale, glm::u8vec4 const &color) {
+void DrawSprites::draw_text(std::string const &name, glm::vec2 const &anchor, float scale, glm::u8vec4 const &color, float shake /*= 1.0f*/) {
+	static std::mt19937 mt;
 	glm::vec2 moving_anchor = anchor;
 	for (size_t pos = 0; pos < name.size(); pos++){
+		glm::vec2 shake_offset = shake * glm::vec2( ( mt() / float( mt.max() ) ) - 0.5f, ( mt() / float( mt.max() ) ) - 0.5f);
 		Sprite const &chr = atlas.lookup(name.substr(pos,1));
-		draw(chr, moving_anchor, scale, color);
+		draw(chr, moving_anchor + shake_offset, scale, color);
 		moving_anchor.x += (chr.max_px.x - chr.min_px.x) * scale;
 	}
 }
 
-void DrawSprites::get_text_extents(std::string const &name, glm::vec2 const &anchor, float scale, glm::vec2 *min, glm::vec2 *max) {
+void DrawSprites::get_text_extents(std::string const &name, glm::vec2 const &anchor, float scale, glm::vec2 *min, glm::vec2 *max) 
+{
+	if (min)
+	{
+		(*min) = anchor;
+	}
+	if (max)
+	{
+		(*max) = anchor;
+		for (size_t pos = 0; pos < name.size(); pos++) {
+			Sprite const& chr = atlas.lookup(name.substr(pos, 1));
+			max->x += (chr.max_px.x - chr.min_px.x) * scale;
+		}
+	}
 }
+
+float DrawSprites::get_text_length( std::string const &name, float scale )
+{
+	glm::vec2 dummy_anchor = glm::vec2( 0.0f, 0.0f );
+	glm::vec2 min, max = glm::vec2( 0.0f, 0.0f);
+	get_text_extents( name, dummy_anchor, scale, &min, &max );
+	return max.x - min.x;
+}
+
+
 
 DrawSprites::~DrawSprites() {
 	if (attribs.empty()) return;

@@ -63,6 +63,22 @@ void MenuMode::update(float elapsed) {
 	if (background) {
 		background->update(elapsed);
 	}
+
+
+
+	delay_ticker += elapsed;
+
+	int total_size = 0;
+	for( int i = 0; i < items.size(); i++ )
+	{
+		total_size += int( items[i].name.length() );
+	}
+
+	while (delay_ticker >= char_print_delay)
+	{
+		next_char_to_show = std::min(next_char_to_show+1, total_size);
+		delay_ticker -= char_print_delay;
+	}
 }
 
 void MenuMode::draw(glm::uvec2 const &drawable_size) {
@@ -86,22 +102,29 @@ void MenuMode::draw(glm::uvec2 const &drawable_size) {
 		assert(atlas && "it is an error to try to draw a menu without an atlas");
 		DrawSprites draw_sprites(*atlas, view_min, view_max, drawable_size, DrawSprites::AlignPixelPerfect);
 
-		for (auto const &item : items) {
+		for (int i = 0; i < items.size(); i++) 
+		{
+			Item const &item = items[i];
 			bool is_selected = (&item == &items[0] + selected);
 			glm::u8vec4 color = (is_selected ? glm::u8vec4(0xff, 0x00, 0xff, 0xff) : glm::u8vec4(0xff, 0xff, 0xff, 0xff));
 			float left, right;
-			if (!item.sprite) {
+			if (!item.sprite) 
+			{
+				int chars_to_show = next_char_to_show;
+				for( int j = 0; j < i; j++ )
+				{
+					chars_to_show = std::max( 0, chars_to_show - int( items[j].name.length()) );
+				}
+				std::string item_text = item.name.substr(0, std::min(chars_to_show, int(item.name.length())));
 				//draw item.name as text:
-				draw_sprites.draw_text(
-					item.name, item.at, item.scale, color
-				);
+				draw_sprites.draw_text(item_text, item.at, item.scale, color);
 				glm::vec2 min,max;
-				draw_sprites.get_text_extents(
-					item.name, item.at, item.scale, &min, &max
-				);
+				draw_sprites.get_text_extents(item_text, item.at, item.scale, &min, &max);
 				left = min.x;
 				right = max.x;
-			} else {
+			} 
+			else 
+			{
 				draw_sprites.draw(*item.sprite, item.at, item.scale, color);
 				left = item.at.x + item.scale * (item.sprite->min_px.x - item.sprite->anchor_px.x);
 				right = item.at.x + item.scale * (item.sprite->max_px.x - item.sprite->anchor_px.x);

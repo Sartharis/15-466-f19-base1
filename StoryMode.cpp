@@ -7,81 +7,54 @@
 #include "gl_errors.hpp"
 #include "MenuMode.hpp"
 
-Sprite const *sprite_left_select = nullptr;
-Sprite const *sprite_right_select = nullptr;
+Sprite const *sprite_main_hall = nullptr;
+Sprite const *sprite_room_red = nullptr;
+Sprite const *sprite_room_pink = nullptr;
+Sprite const *sprite_room_yellow = nullptr;
 
-Sprite const *sprite_dunes_bg = nullptr;
-Sprite const *sprite_dunes_traveller = nullptr;
-Sprite const *sprite_dunes_ship = nullptr;
+const std::string text_main_hall = "You stand in the Hall of the Haruspices.";
+const std::string text_main_hall_2 = "They must be appeased.";
+const std::string text_main_hall_done = "The Hall has grown calm. Your job is done.";
+const std::string text_main_hall_leave_not_done = "There is still hunger here.";
 
-Sprite const *sprite_oasis_bg = nullptr;
-Sprite const *sprite_oasis_traveller = nullptr;
-Sprite const *sprite_oasis_missing = nullptr;
+const std::string text_choice_red = "Squeeze past the red gap";
+const std::string text_choice_pink = "Push through the pink doors";
+const std::string text_choice_yellow = "Descend into the yellow hole";
 
-Sprite const *sprite_hill_bg = nullptr;
-Sprite const *sprite_hill_traveller = nullptr;
-Sprite const *sprite_hill_missing = nullptr;
+const std::string text_red = "The Chamber of Hearts roars. \"I HAVE ";
+const std::string text_red_2 ="NEED. LORE OF FLAMES. \" ";
+const std::string text_red_success = "The Chamber begins to pulse ";
+const std::string text_red_success_2 = "rhythmically. \"GOOD.\" ";
+const std::string text_red_fail = "The engine of hate is ";
+const std::string text_red_fail_2 = "stirring. \"NO. NO NO NO.\" ";
+const std::string text_pink = "The Augur of Time towers. \"I must consume ";
+const std::string text_pink_2 = "that which feasts on the heavens.\" ";
+const std::string text_pink_success = "The sunflower floats into the Augur's";
+const std::string text_pink_success_2 = " chest. \"Delicious. You may leave.\" ";
+const std::string text_pink_fail = "Time slows. \"Are you trying to insult me?.\" ";
+const std::string text_yellow = "The Eternal Horror shambles towards you. ";
+const std::string text_yellow_2 = "\"Grantt... me a f-facsimile of l-life.\" ";
+const std::string text_yellow_success = "The toy is absorbed. \"B-beautiful.\" ";
+const std::string text_yellow_fail = "The air is filled with the smell of";
+const std::string text_yellow_fail_2 = " sulfur. \"N-no... \" ";
+const std::string text_done = "You have fulfilled your task in here.";
 
-Sprite const *text_dunes_landing = nullptr;
-Sprite const *text_dunes_return = nullptr;
-Sprite const *text_dunes_wont_leave = nullptr;
-Sprite const *text_dunes_do_leave = nullptr;
-Sprite const *text_dunes_do_walk_east = nullptr;
-Sprite const *text_dunes_do_walk_west = nullptr;
+const std::string text_gift_red = "Give Muffin Cookbook";
+const std::string text_gift_pink = "Give Sunflower";
+const std::string text_gift_yellow = "Give Dog Plush Toy";
+const std::string text_leave = "Leave";
 
-Sprite const *text_oasis_intro = nullptr;
-Sprite const *text_oasis_stone = nullptr;
-Sprite const *text_oasis_plain = nullptr;
-Sprite const *text_oasis_stone_taken = nullptr;
-Sprite const *text_oasis_do_take_stone = nullptr;
-Sprite const *text_oasis_do_return = nullptr;
-
-Sprite const *text_hill_intro = nullptr;
-Sprite const *text_hill_inactive = nullptr;
-Sprite const *text_hill_active = nullptr;
-Sprite const *text_hill_stone_added = nullptr;
-Sprite const *text_hill_do_add_stone = nullptr;
-Sprite const *text_hill_do_return = nullptr;
+Load< SpriteAtlas > text( LoadTagDefault, []() -> SpriteAtlas const * {
+	SpriteAtlas const *ret = new SpriteAtlas( data_path( "the-planet" ) );
+	return ret;
+} );
 
 Load< SpriteAtlas > sprites(LoadTagDefault, []() -> SpriteAtlas const * {
-	SpriteAtlas const *ret = new SpriteAtlas(data_path("the-planet"));
-
-	sprite_left_select = &ret->lookup("text-select-left");
-	sprite_right_select = &ret->lookup("text-select-right");
-
-	sprite_dunes_bg = &ret->lookup("dunes-bg");
-	sprite_dunes_traveller = &ret->lookup("dunes-traveller");
-	sprite_dunes_ship = &ret->lookup("dunes-ship");
-
-	sprite_oasis_bg = &ret->lookup("oasis-bg");
-	sprite_oasis_traveller = &ret->lookup("oasis-traveller");
-	sprite_oasis_missing = &ret->lookup("oasis-missing");
-
-	sprite_hill_bg = &ret->lookup("hill-bg");
-	sprite_hill_traveller = &ret->lookup("hill-traveller");
-	sprite_hill_missing = &ret->lookup("hill-missing");
-
-	text_dunes_landing = &ret->lookup("dunes-text-landing");
-	text_dunes_return = &ret->lookup("dunes-text-return");
-	text_dunes_wont_leave = &ret->lookup("dunes-text-won't-leave");
-	text_dunes_do_leave = &ret->lookup("dunes-text-do-leave");
-	text_dunes_do_walk_east = &ret->lookup("dunes-text-do-walk-east");
-	text_dunes_do_walk_west = &ret->lookup("dunes-text-do-walk-west");
-
-	text_oasis_intro = &ret->lookup("oasis-text-intro");
-	text_oasis_stone = &ret->lookup("oasis-text-stone");
-	text_oasis_plain = &ret->lookup("oasis-text-plain");
-	text_oasis_stone_taken = &ret->lookup("oasis-text-stone-taken");
-	text_oasis_do_take_stone = &ret->lookup("oasis-text-do-take-stone");
-	text_oasis_do_return = &ret->lookup("oasis-text-do-return");
-
-	text_hill_intro = &ret->lookup("hill-text-intro");
-	text_hill_inactive = &ret->lookup("hill-text-inactive");
-	text_hill_active = &ret->lookup("hill-text-active");
-	text_hill_stone_added = &ret->lookup("hill-text-stone-added");
-	text_hill_do_add_stone = &ret->lookup("hill-text-do-add-stone");
-	text_hill_do_return = &ret->lookup("hill-text-do-return");
-
+	SpriteAtlas const *ret = new SpriteAtlas(data_path("the-hall"));
+	sprite_main_hall = &ret->lookup( "main-hall" );
+	sprite_room_red = &ret->lookup( "red-room" );
+	sprite_room_pink = &ret->lookup( "pink-room" );
+	sprite_room_yellow = &ret->lookup( "yellow-room" );
 	return ret;
 });
 
@@ -107,21 +80,148 @@ void StoryMode::update(float elapsed) {
 void StoryMode::enter_scene() {
 	//just entered this scene, adjust flags and build menu as appropriate:
 	std::vector< MenuMode::Item > items;
-	glm::vec2 at(3.0f, view_max.y - 3.0f);
-	auto add_text = [&items,&at](Sprite const *text) {
-		assert(text);
-		items.emplace_back("TEST TEXT", nullptr, 1.0f, nullptr, at);
-		at.y -= text->max_px.y - text->min_px.y;
-		at.y -= 4.0f;
+	glm::vec2 at(3.0f, view_max.y - 16.0f);
+	auto add_text = [&items,&at](std::string text) {
+		items.emplace_back(text, nullptr, 1.0f, nullptr, at);
+		at.y -= 20.0f;
 	};
-	auto add_choice = [&items,&at](Sprite const *text, std::function< void(MenuMode::Item const &) > const &fn) {
-		assert(text);
-		items.emplace_back("TEST CHOICE", nullptr, 1.0f, fn, at + glm::vec2(8.0f, 0.0f));
-		at.y -= text->max_px.y - text->min_px.y;
-		at.y -= 4.0f;
+	auto add_choice = [&items,&at]( std::string text, std::function< void(MenuMode::Item const &) > const &fn) {
+		items.emplace_back(text, nullptr, 1.0f, fn, at + glm::vec2(8.0f, 0.0f));
+		at.y -= 20.0f;
 	};
 
-	if (location == Dunes) {
+	//Set 
+	
+
+
+	if( location == Hall )
+	{
+		if( gave_red && gave_yellow && gave_pink )
+		{
+			add_text( text_main_hall_done );
+			add_choice( text_leave, [this]( MenuMode::Item const & ){
+				Mode::current = nullptr;
+			} );
+		}
+		else
+		{
+			add_text( text_main_hall );
+			add_text( text_main_hall_2 );
+		}
+
+		at.y -= 20.0f;
+
+		if(!gave_red )
+		add_choice( text_choice_red, [this]( MenuMode::Item const & ){
+			location = RedRoom;
+			anger = false;
+			Mode::current = shared_from_this();
+		} );
+		if(!gave_pink )
+		add_choice( text_choice_pink, [this]( MenuMode::Item const & ){
+			location = PinkRoom;
+			anger = false;
+			Mode::current = shared_from_this();
+		} );
+		if(!gave_yellow )
+		add_choice( text_choice_yellow, [this]( MenuMode::Item const & ){
+			location = YellowRoom;
+			anger = false;
+			Mode::current = shared_from_this();
+		} );
+	}
+	else
+	{
+		bool success = false;
+		if( location == RedRoom )
+		{
+			if( gave_red ) 
+			{ 
+				success = true;
+				add_text( text_red_success ); 
+				add_text( text_red_success_2 );
+			}
+			else if( anger ) 
+			{
+				add_text( text_red_fail ); 
+				add_text( text_red_fail_2 ); 
+			}
+			else 
+			{
+				add_text( text_red ); 
+				add_text( text_red_2 );
+			}
+		}
+		else if( location == PinkRoom )
+		{
+			if( gave_pink )
+			{
+				success = true;
+				add_text( text_pink_success );
+				add_text( text_pink_success_2 );
+			}
+			else if( anger )
+			{
+				add_text( text_pink_fail );
+			}
+			else
+			{
+				add_text( text_pink );
+				add_text( text_pink_2 );
+			}
+		}
+		else if( location == YellowRoom )
+		{
+			if( gave_yellow )
+			{
+				success = true;
+				add_text( text_yellow_success );
+			}
+			else if( anger )
+			{
+				add_text( text_yellow_fail );
+				add_text( text_yellow_fail_2 );
+			}
+			else
+			{
+				add_text( text_yellow );
+				add_text( text_yellow_2 );
+			}
+		}
+
+		at.y -= 20.0f;
+
+		if( !gave_red && !success)
+		{
+			add_choice( text_gift_red, [this]( MenuMode::Item const & ){
+				anger = location != RedRoom;
+				gave_red = location == RedRoom;
+				Mode::current = shared_from_this();
+			} );
+		}
+		if( !gave_pink && !success )
+		{
+			add_choice( text_gift_pink, [this]( MenuMode::Item const & ){
+				anger = location != PinkRoom;
+				gave_pink = location == PinkRoom;
+				Mode::current = shared_from_this();
+			} );
+		}
+		if( !gave_yellow && !success )
+		{
+			add_choice( text_gift_yellow, [this]( MenuMode::Item const & ){
+				anger = location != YellowRoom;
+				gave_yellow = location == YellowRoom;
+				Mode::current = shared_from_this();
+			} );
+		}
+		add_choice( text_leave, [this]( MenuMode::Item const & ){
+			location = Hall;
+			Mode::current = shared_from_this();
+		} );
+	}
+
+	/*if (location == Dunes) {
 		if (dunes.wont_leave) {
 			dunes.wont_leave = false;
 			add_text(text_dunes_wont_leave);
@@ -132,7 +232,7 @@ void StoryMode::enter_scene() {
 		} else {
 			add_text(text_dunes_return);
 		}
-		at.y -= 8.0f; //gap before choices
+		at.y -= 2.0f; //gap before choices
 		add_choice(text_dunes_do_walk_west, [this](MenuMode::Item const &){
 			location = Hill;
 			Mode::current = shared_from_this();
@@ -166,7 +266,7 @@ void StoryMode::enter_scene() {
 		if (!have_stone) {
 			add_text(text_oasis_stone);
 		}
-		at.y -= 8.0f; //gap before choices
+		at.y -= 2.0f; //gap before choices
 		if (!have_stone) {
 			add_choice(text_oasis_do_take_stone, [this](MenuMode::Item const &){
 				have_stone = true;
@@ -193,7 +293,7 @@ void StoryMode::enter_scene() {
 				add_text(text_hill_inactive);
 			}
 		}
-		at.y -= 8.0f; //gap before choices
+		at.y -= 2.0f; //gap before choices
 		if (have_stone && !added_stone) {
 			add_choice(text_hill_do_add_stone, [this](MenuMode::Item const &){
 				added_stone = true;
@@ -205,11 +305,9 @@ void StoryMode::enter_scene() {
 			location = Dunes;
 			Mode::current = shared_from_this();
 		});
-	}
+	}*/
 	std::shared_ptr< MenuMode > menu = std::make_shared< MenuMode >(items);
-	menu->atlas = sprites;
-	menu->left_select = sprite_left_select;
-	menu->right_select = sprite_right_select;
+	menu->atlas = text;
 	menu->view_min = view_min;
 	menu->view_max = view_max;
 	menu->background = shared_from_this();
@@ -230,23 +328,14 @@ void StoryMode::draw(glm::uvec2 const &drawable_size) {
 	{ //use a DrawSprites to do the drawing:
 		DrawSprites draw(*sprites, view_min, view_max, drawable_size, DrawSprites::AlignPixelPerfect);
 		glm::vec2 ul = glm::vec2(view_min.x, view_max.y);
-		if (location == Dunes) {
-			draw.draw(*sprite_dunes_bg, ul);
-			draw.draw(*sprite_dunes_ship, ul);
-			draw.draw(*sprite_dunes_traveller, ul);
-		} else if (location == Oasis) {
-			draw.draw(*sprite_oasis_bg, ul);
-			if (!have_stone) {
-				draw.draw(*sprite_oasis_missing, ul);
-			}
-			draw.draw(*sprite_oasis_traveller, ul);
-
-		} else if (location == Hill) {
-			draw.draw(*sprite_hill_bg, ul);
-			if (added_stone) {
-				draw.draw(*sprite_hill_missing, ul);
-			}
-			draw.draw(*sprite_hill_traveller, ul);
+		if (location == Hall) {
+			draw.draw(*sprite_main_hall, ul);
+		} else if (location == RedRoom) {
+			draw.draw(*sprite_room_red, ul);
+		} else if (location == YellowRoom) {
+			draw.draw(*sprite_room_yellow, ul);
+		} else if( location == PinkRoom ) {
+			draw.draw( *sprite_room_pink, ul );
 		}
 	}
 	GL_ERRORS(); //did the DrawSprites do something wrong?
